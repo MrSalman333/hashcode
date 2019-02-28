@@ -133,7 +133,16 @@ public class Chalnge {
         String[] s1Tags = s1.getTagOfSilde();
         String[] s2Tags = s2.getTagOfSilde();
 
-        boolean isS1Extra;
+         for (int i = 0; i < s1Tags.length; i++) {
+            for (int j = 0; j < s2Tags.length; j++) {
+                if (s1Tags[i].equals(s2Tags[j])) {
+                    shared++;
+                }
+            }
+            s1Extra = s1Tags.length -shared ;
+            s2Extra = s2Tags.length - shared;
+        }
+        /*boolean isS1Extra;
         boolean isS2Extra;
         for (int i = 0; i < s1Tags.length; i++) {
             isS1Extra = true;
@@ -159,7 +168,7 @@ public class Chalnge {
             if (isS2Extra) {
                 s2Extra++;
             }
-        }
+        }*/
 
         return Math.min(Math.min(shared, s1Extra), s2Extra);
     }
