@@ -85,6 +85,11 @@ public class Photo {
 
     @Override
     public String toString() {
+        String tags ="{";
+        for (int i = 0; i < this.tags.length; i++) {
+            tags+=this.tags[i]+", ";
+        }
+        tags+="}";
         return "Photo{" + "character=" + character + ", chosen=" + chosen + ", tags=" + tags + ", ID=" + ID + '}';
     }
 

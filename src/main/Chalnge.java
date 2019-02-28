@@ -25,6 +25,9 @@ public class Chalnge {
     public static void main(String[] args) {
         
         ArrayList<Photo> photos = read("a_example.txt");
+        for (Photo p : photos) {
+            System.out.println(p);
+        }
         ArrayList<Slide> slides = makeSlideList(photos);
         ArrayList<Slide> ordered = makeOrdered(slides);
         write("test1.txt", ordered);
@@ -38,8 +41,13 @@ public class Chalnge {
             if (p.getCharacter() == 'H') {
                 slides.add(new Slide(p));
             } else {
-                Photo p2 = photos.get(bestmMtch(photos, p.getID()));
+                int index = bestmMtch(photos, p.getID());
+                if(index != -1){
+                Photo p2 = photos.get(index);
                 slides.add(new Slide(p2, p));
+                }else{
+                    System.out.println("problim");
+                }
             }
         }
         return slides;
