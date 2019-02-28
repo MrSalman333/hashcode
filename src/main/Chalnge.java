@@ -25,14 +25,9 @@ public class Chalnge {
     public static void main(String[] args) {
 
         ArrayList<Photo> photos = read("a_example.txt");
-        for (Photo p : photos) {
-            System.out.println(p);
-        }
         ArrayList<Slide> slides = makeSlideList(photos);
         ArrayList<Slide> ordered = makeOrdered(slides);
-        for (Slide s : ordered) {
-            System.out.println("slide" + s);
-        }
+       
         write("test1.txt", ordered);
 
     }
@@ -45,10 +40,8 @@ public class Chalnge {
                 continue;
             }
             if (p.getCharacter() == 'H') {
-                System.out.println("H");
                 slides.add(new Slide(p));
             } else {
-                System.out.println("V");
                 int index = bestmMtch(photos, p.getID());
                 if (index != -1) {
                     Photo p2 = photos.get(index);
@@ -73,24 +66,30 @@ public class Chalnge {
         Slide last = ordered.get(0);
         int bestCaseScoure = -1;
         
-        for (Slide s1 : slides) {
-            if (s1.isAdded()) {
-                continue;
-            }
+        while(slides.size() != ordered.size()){
+            
             Slide bestCase = null;
-
             for (Slide s2 : slides) {
                 if (s2.isAdded()) {
                     continue;
                 }
+                
                 int scoure = score(last, s2);
                 if (scoure > bestCaseScoure) {
                     bestCaseScoure = scoure;
                     bestCase = s2;
                 }
             }
+            if(bestCase == null){
+                for (Slide s : slides) {
+                    if(!s.isAdded())
+                        ordered.add(s);
+                        s.setAdded(true);
+                }
+            }else{
             ordered.add(bestCase);
             bestCase.setAdded(true);
+            }
             System.out.println("size of ordered = " + ordered.size());
 
         }
@@ -135,7 +134,7 @@ public class Chalnge {
                 if (s.getNumberOfPhoto() == 1) {
                     writer.println(s.getId1());
                 } else {
-                    writer.println(s.getId1() + " " + s.getId2());
+                    writer.println(s.getId1() + "  " + s.getId2());
                 }
             }
 
@@ -160,33 +159,7 @@ public class Chalnge {
             s1Extra = s1Tags.length - shared;
             s2Extra = s2Tags.length - shared;
         }
-        /*boolean isS1Extra;
-        boolean isS2Extra;
-        for (int i = 0; i < s1Tags.length; i++) {
-            isS1Extra = true;
-            for (int j = 0; j < s2Tags.length; j++) {
-                if (s1Tags[i].equals(s2Tags[j])) {
-                    shared++;
-                    isS1Extra = false;
-                }
 
-            }
-            if (isS1Extra) {
-                s1Extra++;
-            }
-        }
-
-        for (int i = 0; i < s2Tags.length; i++) {
-            isS2Extra = true;
-            for (int j = 0; j < s1Tags.length; j++) {
-                if (s2Tags[i].equals(s1Tags[j])) {
-                    isS2Extra = false;
-                }
-            }
-            if (isS2Extra) {
-                s2Extra++;
-            }
-        }*/
 
         return Math.min(Math.min(shared, s1Extra), s2Extra);
     }
