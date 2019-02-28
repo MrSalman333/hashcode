@@ -29,7 +29,12 @@ public class Chalnge {
             System.out.println(p);
         }
         ArrayList<Slide> slides = makeSlideList(photos);
+        System.out.println("size of slides = " + slides.size());
         ArrayList<Slide> ordered = makeOrdered(slides);
+        System.out.println("size of ordered = "+ordered.size());
+        for(Slide s : slides){
+            System.out.println("slide" + s);
+        }
         write("test1.txt", ordered);
         
     }
@@ -41,12 +46,15 @@ public class Chalnge {
             if(p.isChosen())
                 continue;
             if (p.getCharacter() == 'H') {
+                System.out.println("H");
                 slides.add(new Slide(p));
             } else {
+                System.out.println("V");
                 int index = bestmMtch(photos, p.getID());
                 if(index != -1){
                 Photo p2 = photos.get(index);
-                slides.add(new Slide(p2, p));
+                Slide s = new Slide(p2, p);
+                slides.add(s);
                 }else{
                     System.out.println("problim");
                 }
@@ -112,6 +120,7 @@ public class Chalnge {
     public static void write(String fileName, ArrayList<Slide> list) {
 
         int numberOfSlides = list.size();
+        System.out.println("size is = "+ list.size());
         try (PrintWriter writer = new PrintWriter(fileName)) {
             writer.println(numberOfSlides);
             for (Slide s : list) {

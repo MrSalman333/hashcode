@@ -16,6 +16,7 @@ public class Slide {
     private int id1;
     private int id2;
     boolean added;
+    Photo photo1, photo2;
 
     public boolean isAdded() {
         return added;
@@ -24,7 +25,6 @@ public class Slide {
     public void setAdded(boolean added) {
         this.added = added;
     }
-    Photo photo = new Photo();
 
     public Slide(Photo p) {
         tagOfSilde = p.getTags();
@@ -32,6 +32,7 @@ public class Slide {
         id1 = p.getID();
         p.setChosen(true);
         added = false;
+        photo1 = p;
     }
 
     public Slide(Photo p1, Photo p2) {
@@ -42,6 +43,9 @@ public class Slide {
         p1.setChosen(true);
         p2.setChosen(true);
         added = false;
+        photo1 = p1;
+        photo2 = p2;
+
     }
 
     public int getNumberOfPhoto() {
@@ -76,7 +80,7 @@ public class Slide {
         this.id2 = id2;
     }
 
-    public  String[] combainTags(Photo p1, Photo p2) {
+    public String[] combainTags(Photo p1, Photo p2) {
         String[] p1t = p1.getTags();
         String[] p2t = p1.getTags();
         String[] result = new String[p1t.length + p2t.length];
@@ -99,5 +103,15 @@ public class Slide {
             }
         }
         return result;
+    }
+
+    @Override
+    public String toString() {
+        if (numberOfPhoto == 2) {
+            return "slide=" + photo1.toString() + photo2.toString();
+        } else {
+            return "slide=" + photo1.toString();
+        }
+
     }
 }
