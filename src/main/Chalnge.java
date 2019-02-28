@@ -23,12 +23,12 @@ public class Chalnge {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
-        ArrayList<Photo> photos = read("a_example.txt");
+        String fileName = "a_example.txt";
+        ArrayList<Photo> photos = read(fileName);
         ArrayList<Slide> slides = makeSlideList(photos);
         ArrayList<Slide> ordered = makeOrdered(slides);
        
-        write("test1.txt", ordered);
+        write("output" + fileName, ordered);
 
     }
 
@@ -134,7 +134,7 @@ public class Chalnge {
                 if (s.getNumberOfPhoto() == 1) {
                     writer.println(s.getId1());
                 } else {
-                    writer.println(s.getId1() + "  " + s.getId2());
+                    writer.println(s.getId1() + " " + s.getId2());
                 }
             }
 
