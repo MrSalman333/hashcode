@@ -38,6 +38,8 @@ public class Chalnge {
         ArrayList<Slide> slides = new ArrayList<Slide>();
 
         for (Photo p : photos) {
+            if(p.isChosen())
+                continue;
             if (p.getCharacter() == 'H') {
                 slides.add(new Slide(p));
             } else {
@@ -110,7 +112,6 @@ public class Chalnge {
     public static void write(String fileName, ArrayList<Slide> list) {
 
         int numberOfSlides = list.size();
-        int ids[][] = {{0}, {3}, {1, 2}};
         try (PrintWriter writer = new PrintWriter(fileName)) {
             writer.println(numberOfSlides);
             for (Slide s : list) {
