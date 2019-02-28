@@ -29,10 +29,8 @@ public class Chalnge {
             System.out.println(p);
         }
         ArrayList<Slide> slides = makeSlideList(photos);
-        System.out.println("size of slides = " + slides.size());
         ArrayList<Slide> ordered = makeOrdered(slides);
-        System.out.println("size of ordered = " + ordered.size());
-        for (Slide s : slides) {
+        for (Slide s : ordered) {
             System.out.println("slide" + s);
         }
         write("test1.txt", ordered);
@@ -69,9 +67,12 @@ public class Chalnge {
 
         ordered.add(slides.get(0));
         slides.get(0).setAdded(true);
+        
         System.out.println("size of ordered = " + ordered.size());
+        
         Slide last = ordered.get(0);
         int bestCaseScoure = -1;
+        
         for (Slide s1 : slides) {
             if (s1.isAdded()) {
                 continue;
