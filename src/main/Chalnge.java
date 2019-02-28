@@ -23,7 +23,7 @@ public class Chalnge {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         ArrayList<Photo> photos = read("a_example.txt");
         for (Photo p : photos) {
             System.out.println(p);
@@ -31,31 +31,32 @@ public class Chalnge {
         ArrayList<Slide> slides = makeSlideList(photos);
         System.out.println("size of slides = " + slides.size());
         ArrayList<Slide> ordered = makeOrdered(slides);
-        System.out.println("size of ordered = "+ordered.size());
-        for(Slide s : slides){
+        System.out.println("size of ordered = " + ordered.size());
+        for (Slide s : slides) {
             System.out.println("slide" + s);
         }
         write("test1.txt", ordered);
-        
+
     }
 
     private static ArrayList<Slide> makeSlideList(ArrayList<Photo> photos) {
         ArrayList<Slide> slides = new ArrayList<Slide>();
 
         for (Photo p : photos) {
-            if(p.isChosen())
+            if (p.isChosen()) {
                 continue;
+            }
             if (p.getCharacter() == 'H') {
                 System.out.println("H");
                 slides.add(new Slide(p));
             } else {
                 System.out.println("V");
                 int index = bestmMtch(photos, p.getID());
-                if(index != -1){
-                Photo p2 = photos.get(index);
-                Slide s = new Slide(p2, p);
-                slides.add(s);
-                }else{
+                if (index != -1) {
+                    Photo p2 = photos.get(index);
+                    Slide s = new Slide(p2, p);
+                    slides.add(s);
+                } else {
                     System.out.println("problim");
                 }
             }
@@ -67,11 +68,11 @@ public class Chalnge {
         ArrayList<Slide> ordered = new ArrayList<Slide>(slides.size());
 
         ordered.add(slides.get(0));
-
+        slides.get(0).setAdded(true);
+        System.out.println("size of ordered = " + ordered.size());
         Slide last = ordered.get(0);
         int bestCaseScoure = -1;
         for (Slide s1 : slides) {
-
             if (s1.isAdded()) {
                 continue;
             }
@@ -88,7 +89,13 @@ public class Chalnge {
                 }
             }
             ordered.add(bestCase);
+            bestCase.setAdded(true);
+            System.out.println("size of ordered = " + ordered.size());
+
         }
+        
+        System.out.println("last size of ordered = " + ordered.size());
+
         return ordered;
     }
 
@@ -120,7 +127,7 @@ public class Chalnge {
     public static void write(String fileName, ArrayList<Slide> list) {
 
         int numberOfSlides = list.size();
-        System.out.println("size is = "+ list.size());
+        System.out.println("size is = " + list.size());
         try (PrintWriter writer = new PrintWriter(fileName)) {
             writer.println(numberOfSlides);
             for (Slide s : list) {
@@ -143,13 +150,13 @@ public class Chalnge {
         String[] s1Tags = s1.getTagOfSilde();
         String[] s2Tags = s2.getTagOfSilde();
 
-         for (int i = 0; i < s1Tags.length; i++) {
+        for (int i = 0; i < s1Tags.length; i++) {
             for (int j = 0; j < s2Tags.length; j++) {
                 if (s1Tags[i].equals(s2Tags[j])) {
                     shared++;
                 }
             }
-            s1Extra = s1Tags.length -shared ;
+            s1Extra = s1Tags.length - shared;
             s2Extra = s2Tags.length - shared;
         }
         /*boolean isS1Extra;
@@ -183,7 +190,7 @@ public class Chalnge {
         return Math.min(Math.min(shared, s1Extra), s2Extra);
     }
 
-    public static int bestmMtch(ArrayList<Photo>photos, int id) {
+    public static int bestmMtch(ArrayList<Photo> photos, int id) {
         String[] tags1 = photos.get(id).getTags();
 
         int[] scores = new int[photos.size()];
