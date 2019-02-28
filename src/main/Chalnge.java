@@ -23,7 +23,7 @@ public class Chalnge {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String fileName = "a_example.txt";
+        String fileName = "c_memorable_moments.txt";
         ArrayList<Photo> photos = read(fileName);
         ArrayList<Slide> slides = makeSlideList(photos);
         ArrayList<Slide> ordered = makeOrdered(slides);

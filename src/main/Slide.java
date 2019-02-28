@@ -102,7 +102,11 @@ public class Slide {
                 x++;
             }
         }
-        return result;
+        String[] newResult = new String[x];
+        for (int i = 0; i < x; i++) {
+            newResult[i] = result[i];
+        }
+        return newResult;
     }
 
     @Override
