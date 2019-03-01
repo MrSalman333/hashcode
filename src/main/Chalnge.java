@@ -211,10 +211,10 @@ public class Chalnge {
             }
             scores[i] = count;
         }
-        int min = 9999999;
-        int minIndex = -1;
+        int min = scores[id];
+        int minIndex = id;
         for (int i = id; i < scores.length; i++) {
-            if (scores[i] < min) {
+            if (scores[i] < min ||(scores[i] == min && photos.get(minIndex).getTags().length < photos.get(i).getTags().length  ) ) {
                 min = scores[i];
                 minIndex = i;
             }
