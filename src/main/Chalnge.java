@@ -23,12 +23,16 @@ public class Chalnge {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        String fileName = "c_memorable_moments.txt";
-        ArrayList<Photo> photos = read(fileName);
+        String[] files = {"a_example.txt", "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"};
+        String file = files[3];
+        System.out.println("starrted reading");
+        ArrayList<Photo> photos = read(file);
+        System.out.println("done reading start making slides");
         ArrayList<Slide> slides = makeSlideList(photos);
+        System.out.println("done slides and started ordaring");
         ArrayList<Slide> ordered = makeOrdered(slides);
-       
-        write("output" + fileName, ordered);
+        System.out.println("done ordring now writing");
+        write("output" + file, ordered);
 
     }
 
@@ -58,42 +62,48 @@ public class Chalnge {
     private static ArrayList<Slide> makeOrdered(ArrayList<Slide> slides) {
         ArrayList<Slide> ordered = new ArrayList<Slide>(slides.size());
 
-        ordered.add(slides.get(0));
-        slides.get(0).setAdded(true);
-        
+        Slide first = slides.get(0);
+        ordered.add(first);
+        first.setAdded(true);
+
         System.out.println("size of ordered = " + ordered.size());
-        
-        Slide last = ordered.get(0);
-        int bestCaseScoure = -1;
-        
-        while(slides.size() != ordered.size()){
-            
+
+        Slide last = first;
+        System.out.println("size should be " + slides.size());
+        int counter = 0;
+        while (slides.size() != ordered.size()) {
+            int bestCaseScoure = -1;
+
             Slide bestCase = null;
-            for (Slide s2 : slides) {
+
+            for (int i = ordered.size(); i < slides.size(); i += 100) {
+                Slide s2 = slides.get(i);
+
                 if (s2.isAdded()) {
                     continue;
                 }
-                
+
                 int scoure = score(last, s2);
                 if (scoure > bestCaseScoure) {
                     bestCaseScoure = scoure;
                     bestCase = s2;
                 }
             }
-            if(bestCase == null){
+
+            if (bestCase == null) {
                 for (Slide s : slides) {
-                    if(!s.isAdded())
+                    if (!s.isAdded()) {
                         ordered.add(s);
-                        s.setAdded(true);
+                    }
+                    s.setAdded(true);
                 }
-            }else{
-            ordered.add(bestCase);
-            bestCase.setAdded(true);
+            } else {
+                ordered.add(bestCase);
+                bestCase.setAdded(true);
             }
-            System.out.println("size of ordered = " + ordered.size());
 
         }
-        
+
         System.out.println("last size of ordered = " + ordered.size());
 
         return ordered;
@@ -159,7 +169,6 @@ public class Chalnge {
             s1Extra = s1Tags.length - shared;
             s2Extra = s2Tags.length - shared;
         }
-
 
         return Math.min(Math.min(shared, s1Extra), s2Extra);
     }
