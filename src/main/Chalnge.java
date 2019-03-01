@@ -24,7 +24,7 @@ public class Chalnge {
      */
     public static void main(String[] args) {
         String[] files = {"a_example.txt", "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"};
-        String file = files[3];
+        String file = files[4];
         System.out.println("starrted reading");
         ArrayList<Photo> photos = read(file);
         System.out.println("done reading start making slides");
@@ -40,9 +40,13 @@ public class Chalnge {
         ArrayList<Slide> slides = new ArrayList<Slide>();
 
         for (Photo p : photos) {
+            if (p.getID() % 100 == 0) {
+                System.out.println("doing photo number " + p.getID());
+            }
             if (p.isChosen()) {
                 continue;
             }
+
             if (p.getCharacter() == 'H') {
                 slides.add(new Slide(p));
             } else {
@@ -177,22 +181,27 @@ public class Chalnge {
         String[] tags1 = photos.get(id).getTags();
 
         int[] scores = new int[photos.size()];
-        for (int i = 0; i < scores.length; i++) {
-            scores[i] = 9999999;
-        }
         int count;
+        int checkCounter = 0;
         for (int i = 0; i < photos.size(); i++) {
+            scores[i] = 9999999;
+
             count = 0;
             if (photos.get(i).isChosen() || photos.get(i).getCharacter() == 'H' || i == id) {
                 continue;
             }
+
+            if (checkCounter++ > 10000) {
+                break;
+            }
             for (int j = 0; j < tags1.length; j++) {
-                for (int k = 0; k < photos.get(i).getTags().length; k++) {
-                    if (tags1[j].equalsIgnoreCase(photos.get(i).getTags()[k])) {
+                Photo p2 = photos.get(i);
+                for (int k = 0; k < p2.getTags().length; k++) {
+                    if (tags1[j].equalsIgnoreCase(p2.getTags()[k])) {
                         count++;
+                        break;
                     }
                 }
-
             }
             scores[i] = count;
         }
