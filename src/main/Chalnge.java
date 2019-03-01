@@ -94,25 +94,31 @@ public class Chalnge {
         ArrayList<Slide> ordered = new ArrayList<Slide>(slides.size());
 
         Slide first = slides.get(0);
+        int minNumOfTags = 99999;
+        for (int i = 0; i < slides.size(); i++) {
+            if(slides.get(i).getTagOfSilde().length < minNumOfTags){
+                minNumOfTags = slides.get(i).getTagOfSilde().length ;
+                first = slides.get(i);
+            }
+                
+        }
         ordered.add(first);
         first.setAdded(true);
 
         Slide last = first;
         System.out.println("size should be " + slides.size());
-        int counter = 0;
         while (slides.size() != ordered.size()) {
             if (ordered.size() % 100 == 0) {
                 System.out.println("done ordring " + ordered.size());
             }
-            int bestCaseScoure = 99999999;
+            int bestCaseScoure = -1;
             Slide bestCase = null;
 
-            for (int i = 1; i < slides.size(); i += 1) {
+            for (int i = 0; i < slides.size(); i += 1) {
                 Slide s2 = slides.get(i);
                 if (s2.isAdded()) {
                     continue;
                 }
-
                 int scoure = score(last, s2);
                 if (scoure > bestCaseScoure) {
                     bestCaseScoure = scoure;
