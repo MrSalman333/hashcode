@@ -24,7 +24,7 @@ public class Chalnge {
      */
     public static void main(String[] args) {
         String[] files = {"a_example.txt", "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"};
-        String file = files[4];
+        String file = files[3];
         System.out.println("starrted reading");
         ArrayList<Photo> photos = read(file);
         System.out.println("done reading start making slides");
@@ -207,7 +207,7 @@ public class Chalnge {
         }
         int min = 9999999;
         int minIndex = -1;
-        for (int i = 0; i < scores.length; i++) {
+        for (int i = id; i < scores.length; i++) {
             if (scores[i] < min) {
                 min = scores[i];
                 minIndex = i;
