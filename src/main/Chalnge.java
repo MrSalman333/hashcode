@@ -25,19 +25,42 @@ public class Chalnge {
     public static void main(String[] args) {
         String[] files = {"a_example.txt", "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"};
         for (int i = 0; i < files.length; i++) {
-            
-        
-        String file = files[i];
-        System.out.println("starrted reading");
-        ArrayList<Photo> photos = read(file);
-        System.out.println("done reading start making slides");
-        ArrayList<Slide> slides = makeSlideList(photos);
-        System.out.println("done slides and started ordaring");
-        ArrayList<Slide> ordered = makeOrdered(slides);
-        System.out.println("done ordring now writing");
-        write("output" + file, ordered);
-        Photo.clearIds();
+            String file = files[i];
+            System.out.println("starrted reading");
+            ArrayList<Photo> photos = read(file);
+            System.out.println("done reading start making slides");
+            ArrayList<Slide> slides = makeSlideList(photos);
+            System.out.println("done slides and started ordaring");
+            ArrayList<Slide> ordered = makeOrdered(slides);
+            System.out.println("done ordring now writing");
+            write("output" + file, ordered);
+            Photo.clearIds();
         }
+    }
+
+    public static ArrayList<Photo> read(String fileName) {
+        ArrayList<Photo> photos = null;
+        try {
+            Scanner reader = new Scanner(new File(fileName));
+            int numberOfPhotos = reader.nextInt();
+            photos = new ArrayList<>(numberOfPhotos);
+
+            for (int i = 0; i < numberOfPhotos; i++) {
+
+                char orintion = reader.next().charAt(0);
+                int numberOfTags = reader.nextInt();
+                String[] tags = new String[numberOfTags];
+                for (int j = 0; j < tags.length; j++) {
+                    tags[j] = reader.next();
+                }
+                photos.add(new Photo(orintion, tags));
+            }
+
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Chalnge.class.getName()).log(Level.SEVERE, null, ex);
+        }
+
+        return photos;
     }
 
     private static ArrayList<Slide> makeSlideList(ArrayList<Photo> photos) {
@@ -74,8 +97,6 @@ public class Chalnge {
         ordered.add(first);
         first.setAdded(true);
 
-        System.out.println("size of ordered = " + ordered.size());
-
         Slide last = first;
         System.out.println("size should be " + slides.size());
         int counter = 0;
@@ -83,10 +104,10 @@ public class Chalnge {
             if (ordered.size() % 100 == 0) {
                 System.out.println("done ordring " + ordered.size());
             }
-            int bestCaseScoure = -1;
+            int bestCaseScoure = 99999999;
             Slide bestCase = null;
 
-            for (int i = 1; i < slides.size(); i+=1) {
+            for (int i = 1; i < slides.size(); i += 1) {
                 Slide s2 = slides.get(i);
                 if (s2.isAdded()) {
                     continue;
@@ -118,31 +139,6 @@ public class Chalnge {
         System.out.println("last size of ordered = " + ordered.size());
 
         return ordered;
-    }
-
-    public static ArrayList<Photo> read(String fileName) {
-        ArrayList<Photo> photos = null;
-        try {
-            Scanner reader = new Scanner(new File(fileName));
-            int numberOfPhotos = reader.nextInt();
-            photos = new ArrayList<>(numberOfPhotos);
-
-            for (int i = 0; i < numberOfPhotos; i++) {
-
-                char orintion = reader.next().charAt(0);
-                int numberOfTags = reader.nextInt();
-                String[] tags = new String[numberOfTags];
-                for (int j = 0; j < tags.length; j++) {
-                    tags[j] = reader.next();
-                }
-                photos.add(new Photo(orintion, tags));
-            }
-
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Chalnge.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return photos;
     }
 
     public static void write(String fileName, ArrayList<Slide> list) {
@@ -201,7 +197,7 @@ public class Chalnge {
             for (int j = 0; j < tags1.length; j++) {
                 Photo p2 = photos.get(i);
                 for (int k = 0; k < p2.getTags().length; k++) {
-                    if (tags1[j].equalsIgnoreCase(p2.getTags()[k])) {
+                    if (tags1[j].equals(p2.getTags()[k])) {
                         count++;
                         break;
                     }
