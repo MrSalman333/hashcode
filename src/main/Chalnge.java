@@ -183,7 +183,7 @@ public class Chalnge {
         int[] scores = new int[photos.size()];
         int count;
         int checkCounter = 0;
-        for (int i = 0; i < photos.size(); i++) {
+        for (int i = id; i < photos.size(); i++) {
             scores[i] = 9999999;
 
             count = 0;
@@ -191,7 +191,7 @@ public class Chalnge {
                 continue;
             }
 
-            if (checkCounter++ > 10000) {
+            if (checkCounter++ > 1000) {
                 break;
             }
             for (int j = 0; j < tags1.length; j++) {
