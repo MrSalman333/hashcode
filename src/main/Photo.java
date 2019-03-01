@@ -25,6 +25,9 @@ public class Photo {
         count++;
     }
 
+    public static void clearIds (){
+        count = 0;
+    }
     public int getID() {
         return ID;
     }

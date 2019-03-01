@@ -24,7 +24,10 @@ public class Chalnge {
      */
     public static void main(String[] args) {
         String[] files = {"a_example.txt", "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"};
-        String file = files[3];
+        for (int i = 0; i < files.length; i++) {
+            
+        
+        String file = files[i];
         System.out.println("starrted reading");
         ArrayList<Photo> photos = read(file);
         System.out.println("done reading start making slides");
@@ -33,14 +36,15 @@ public class Chalnge {
         ArrayList<Slide> ordered = makeOrdered(slides);
         System.out.println("done ordring now writing");
         write("output" + file, ordered);
-
+        Photo.clearIds();
+        }
     }
 
     private static ArrayList<Slide> makeSlideList(ArrayList<Photo> photos) {
         ArrayList<Slide> slides = new ArrayList<Slide>();
 
         for (Photo p : photos) {
-            if (p.getID() % 100 == 0) {
+            if (p.getID() % 1000 == 0) {
                 System.out.println("doing photo number " + p.getID());
             }
             if (p.isChosen()) {
@@ -76,13 +80,14 @@ public class Chalnge {
         System.out.println("size should be " + slides.size());
         int counter = 0;
         while (slides.size() != ordered.size()) {
+            if (ordered.size() % 100 == 0) {
+                System.out.println("done ordring " + ordered.size());
+            }
             int bestCaseScoure = -1;
-
             Slide bestCase = null;
 
-            for (int i = ordered.size(); i < slides.size(); i += 100) {
+            for (int i = 1; i < slides.size(); i+=10) {
                 Slide s2 = slides.get(i);
-
                 if (s2.isAdded()) {
                     continue;
                 }
@@ -95,15 +100,17 @@ public class Chalnge {
             }
 
             if (bestCase == null) {
+                System.out.println("null best case");
                 for (Slide s : slides) {
                     if (!s.isAdded()) {
                         ordered.add(s);
+                        s.setAdded(true);
                     }
-                    s.setAdded(true);
                 }
             } else {
                 ordered.add(bestCase);
                 bestCase.setAdded(true);
+                last = bestCase;
             }
 
         }
@@ -191,7 +198,7 @@ public class Chalnge {
                 continue;
             }
 
-            if (checkCounter++ > 1000) {
+            if (checkCounter++ > 100) {
                 break;
             }
             for (int j = 0; j < tags1.length; j++) {
