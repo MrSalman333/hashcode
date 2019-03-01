@@ -86,7 +86,7 @@ public class Chalnge {
             int bestCaseScoure = -1;
             Slide bestCase = null;
 
-            for (int i = 1; i < slides.size(); i+=10) {
+            for (int i = 1; i < slides.size(); i+=1) {
                 Slide s2 = slides.get(i);
                 if (s2.isAdded()) {
                     continue;
@@ -198,9 +198,6 @@ public class Chalnge {
                 continue;
             }
 
-            if (checkCounter++ > 100) {
-                break;
-            }
             for (int j = 0; j < tags1.length; j++) {
                 Photo p2 = photos.get(i);
                 for (int k = 0; k < p2.getTags().length; k++) {
