@@ -9,6 +9,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -24,8 +25,8 @@ public class Chalnge {
      */
     public static void main(String[] args) {
         String[] files = {"a_example.txt", "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"};
-        for (int i = 0; i < files.length; i++) {
-            String file = files[i];
+        //for (int i = 0; i < files.length; i++) {
+            String file = files[2];
             System.out.println("starrted reading");
             ArrayList<Photo> photos = read(file);
             System.out.println("done reading start making slides");
@@ -35,7 +36,7 @@ public class Chalnge {
             System.out.println("done ordring now writing");
             write("output" + file, ordered);
             Photo.clearIds();
-        }
+       // }
     }
 
     public static ArrayList<Photo> read(String fileName) {
@@ -91,14 +92,17 @@ public class Chalnge {
     }
 
     private static ArrayList<Slide> makeOrdered(ArrayList<Slide> slides) {
-        ArrayList<Slide> ordered = new ArrayList<Slide>(slides.size());
-
-        Slide first = slides.get(0);
+         ArrayList<Slide> ordered = new ArrayList<Slide>(slides.size());
+        Slide[] arraySlides = new Slide[slides.size()];
+        slides.toArray(arraySlides);
+        Arrays.sort(arraySlides);
+                
+        Slide first = arraySlides[0];
         int minNumOfTags = 99999;
-        for (int i = 0; i < slides.size(); i++) {
-            if(slides.get(i).getTagOfSilde().length < minNumOfTags){
-                minNumOfTags = slides.get(i).getTagOfSilde().length ;
-                first = slides.get(i);
+        for (int i = 0; i < arraySlides.length; i++) {
+            if(arraySlides[i].getTagOfSilde().length < minNumOfTags){
+                minNumOfTags = arraySlides[i].getTagOfSilde().length ;
+                first = arraySlides[i];
             }
                 
         }
@@ -107,7 +111,7 @@ public class Chalnge {
 
         Slide last = first;
         System.out.println("size should be " + slides.size());
-        while (slides.size() != ordered.size()) {
+        while (arraySlides.length != ordered.size()) {
             if (ordered.size() % 100 == 0) {
                 System.out.println("done ordring " + ordered.size());
             }
@@ -116,11 +120,13 @@ public class Chalnge {
             int bestCaseMidDif = 9999;
             Slide bestCase = null;
 
-            for (int i = 0; i < slides.size(); i += 1) {
-                Slide s2 = slides.get(i);
+            for (int i = 0; i < arraySlides.length; i += 1) {
+                Slide s2 = arraySlides[i];
                 if (s2.isAdded()) {
                     continue;
                 }
+                if(s2.getTagOfSilde().length > 2*bestCaseScoure)
+                    break;
                 int scoures[] = scores(last, s2);
                 int thisCaseDif =max(scoures[0],scoures[1],scoures[2]) - min(scoures[0],scoures[1],scoures[2]) ;
                 int thisCaseMidDif = max(scoures[0],scoures[1],scoures[2]) - mid(scoures[0],scoures[1],scoures[2]) ;
@@ -134,7 +140,7 @@ public class Chalnge {
 
             if (bestCase == null) {
                 System.out.println("null best case");
-                for (Slide s : slides) {
+                for (Slide s : arraySlides) {
                     if (!s.isAdded()) {
                         ordered.add(s);
                         s.setAdded(true);
