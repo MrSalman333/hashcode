@@ -16,7 +16,7 @@ public class Slide implements Comparable<Slide> {
 
     @Override
     public int compareTo(Slide o) {
-        return o.getTagOfSilde().length - this.getTagOfSilde().length;
+        return (o.getTagOfSilde().length - this.getTagOfSilde().length);
     }
 
     private int numberOfPhoto;

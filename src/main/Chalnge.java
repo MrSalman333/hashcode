@@ -10,7 +10,10 @@ import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.Scanner;
+import java.util.SortedMap;
+import java.util.TreeMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -29,27 +32,36 @@ public class Chalnge {
     public static void main(String[] args) {
         String[] files = {"a_example.txt", "b_lovely_landscapes.txt", "c_memorable_moments.txt", "d_pet_pictures.txt", "e_shiny_selfies.txt"};
         for (int i = 0; i < files.length; i++) {
-        String file = files[3];
-        System.out.println("starrted reading");
-        ArrayList<Photo> photos = read(file);
-        orderedPhotos = false;
-        System.out.println("done reading start making slides");
-        ArrayList<Slide> slides = makeSlideList(photos);
-        System.out.println("done slides and started ordaring");
-        ArrayList<Slide> ordered = makeOrdered(slides);
-        System.out.println("done ordring now writing");
-        write("output" + file, ordered);
-        Photo.clearIds();
+            String file = files[i];
+            System.out.println("starrted reading " + file);
+            ArrayList<Photo> photos = read(file);
+            orderedPhotos = false;
+            System.out.println("done reading start making slides");
+            ArrayList<Slide> slides = makeSlideList(photos);
+            System.out.println("done slides and started ordaring");
+            ArrayList<Slide> ordered;
+            ordered = makeOrdered(slides);
+            System.out.println("done ordring now writing");
+            write("output" + file, ordered);
+            Photo.clearIds();
         }
     }
 
     public static ArrayList<Photo> read(String fileName) {
         ArrayList<Photo> photos = null;
+        ;SortedMap<String, Integer> allTags = new TreeMap<>(new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                return s2.compareTo(s1);
+            }
+        });
+       
         try {
             Scanner reader = new Scanner(new File(fileName));
             int numberOfPhotos = reader.nextInt();
             photos = new ArrayList<>(numberOfPhotos);
-
+            
+            int maxcount = 0;
             for (int i = 0; i < numberOfPhotos; i++) {
 
                 char orintion = reader.next().charAt(0);
@@ -57,9 +69,20 @@ public class Chalnge {
                 String[] tags = new String[numberOfTags];
                 for (int j = 0; j < tags.length; j++) {
                     tags[j] = reader.next();
+                    Integer tagCount = allTags.get(tags[j]);
+                    if(tagCount == null)
+                        allTags.put(tags[j], 1);
+                    else{
+                        int newCount =++tagCount;
+                        allTags.replace(tags[j],newCount );
+                        if(newCount > maxcount)
+                            maxcount = newCount;
+                    }
                 }
                 photos.add(new Photo(orintion, tags));
             }
+            
+            System.out.println("max count is " + maxcount);
 
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Chalnge.class.getName()).log(Level.SEVERE, null, ex);
@@ -72,9 +95,7 @@ public class Chalnge {
         ArrayList<Slide> slides = new ArrayList<Slide>();
 
         for (Photo p : photos) {
-            if (p.getID() % 1000 == 0) {
-                System.out.println("doing photo number " + p.getID());
-            }
+
             if (p.isChosen()) {
                 continue;
             }
@@ -97,6 +118,7 @@ public class Chalnge {
 
     private static ArrayList<Slide> makeOrdered(ArrayList<Slide> slides) {
         ArrayList<Slide> ordered = new ArrayList<>(slides.size());
+
         System.out.println("before sort first " + slides.get(0).getTagOfSilde().length + " and last " + slides.get(slides.size() - 1).getTagOfSilde().length);
         Slide[] arraySlides = new Slide[slides.size()];
         slides.toArray(arraySlides);
@@ -104,27 +126,22 @@ public class Chalnge {
         int MAXscore = -1;
         System.out.println("after sort first " + arraySlides[0].getTagOfSilde().length + " and last " + arraySlides[arraySlides.length - 1].getTagOfSilde().length);
 
-        Slide first = arraySlides[0];
-        int minNumOfTags = 99999;
-        for (int i = 0; i < arraySlides.length; i++) {
-            if (arraySlides[i].getTagOfSilde().length < minNumOfTags) {
-                minNumOfTags = arraySlides[i].getTagOfSilde().length;
-                first = arraySlides[i];
-            }
+        Slide first = arraySlides[arraySlides.length - 1];
 
-        }
         ordered.add(first);
         first.setAdded(true);
 
         Slide last = first;
         System.out.println("size should be " + slides.size());
+
         while (arraySlides.length != ordered.size()) {
             if (ordered.size() % 100 == 0) {
                 System.out.println("done ordring " + ordered.size());
             }
+
             int bestCaseScoure = -1;
             int bestCaseDif = 9999;
-            int bestCaseMidDif = 9999;
+            int bestCaseMidDif = 0;
             Slide bestCase = null;
 
             for (int i = 0; i < arraySlides.length; i += 1) {
@@ -137,14 +154,94 @@ public class Chalnge {
                 if (scoures[0] == 0) {
                     continue;
                 }
-                int thisCaseDif = max(scoures[0], scoures[1], scoures[2]) - min(scoures[0], scoures[1], scoures[2]);
-                int thisCaseMidDif = max(scoures[0], scoures[1], scoures[2]) - mid(scoures[0], scoures[1], scoures[2]);
+                int thisCaseDif = max(scoures[0], scoures[1], scoures[2]) - min(scoures[0], scoures[1], scoures[2]); //max - min
+                int thisCaseMidDif = max(scoures[0], scoures[1], scoures[2]) - mid(scoures[0], scoures[1], scoures[2]); //max -mid
                 if (scoures[0] > bestCaseScoure || (scoures[0] == bestCaseScoure && (thisCaseDif < bestCaseDif || (thisCaseDif == bestCaseDif && thisCaseMidDif > bestCaseMidDif)))) {
+
                     bestCaseScoure = scoures[0];
                     bestCase = s2;
                     bestCaseDif = thisCaseDif;
                     bestCaseMidDif = thisCaseMidDif;
                     if (bestCaseScoure >= last.getTagOfSilde().length / 2) {
+                        break;
+                    }
+                }
+            }
+
+            if (bestCase == null) {
+                System.out.println("null best case");
+                for (Slide s : arraySlides) {
+                    if (!s.isAdded()) {
+                        ordered.add(s);
+                        s.setAdded(true);
+                    }
+                }
+            } else {
+                ordered.add(bestCase);
+                bestCase.setAdded(true);
+                last = bestCase;
+                if (bestCaseScoure > MAXscore) {
+                    MAXscore = bestCaseScoure;
+                }
+            }
+
+        }
+        System.out.println("Maxe score was " + MAXscore);
+        System.out.println("last size of ordered = " + ordered.size());
+
+        return ordered;
+    }
+
+    private static ArrayList<Slide> makeOrdered(ArrayList<Slide> slides, int max) {
+        ArrayList<Slide> ordered = new ArrayList<>(slides.size());
+
+        System.out.println("before sort first " + slides.get(0).getTagOfSilde().length + " and last " + slides.get(slides.size() - 1).getTagOfSilde().length);
+        Slide[] arraySlides = new Slide[slides.size()];
+        slides.toArray(arraySlides);
+        Arrays.sort(arraySlides);
+        int MAXscore = -1;
+        System.out.println("after sort first " + arraySlides[0].getTagOfSilde().length + " and last " + arraySlides[arraySlides.length - 1].getTagOfSilde().length);
+
+        Slide first = arraySlides[arraySlides.length - 1];
+
+        ordered.add(first);
+        first.setAdded(true);
+
+        Slide last = first;
+        System.out.println("size should be " + slides.size());
+
+        while (arraySlides.length != ordered.size()) {
+            if (ordered.size() % 100 == 0) {
+                System.out.println("done ordring " + ordered.size());
+            }
+
+            int bestCaseScoure = -1;
+            int bestCaseDif = 9999;
+            int bestCaseMidDif = 0;
+            Slide bestCase = null;
+
+            for (int i = 0; i < arraySlides.length; i += 1) {
+                Slide s2 = arraySlides[i];
+                if (s2.isAdded()) {
+                    continue;
+                }
+
+                int scoures[] = scores(last, s2);
+                if (scoures[0] == 0) {
+                    continue;
+                }
+                int thisCaseDif = max(scoures[0], scoures[1], scoures[2]) - min(scoures[0], scoures[1], scoures[2]); //max - min
+                int thisCaseMidDif = max(scoures[0], scoures[1], scoures[2]) - mid(scoures[0], scoures[1], scoures[2]); //max -mid
+                if (scoures[0] > bestCaseScoure || (scoures[0] == bestCaseScoure && (thisCaseDif < bestCaseDif || (thisCaseDif == bestCaseDif && thisCaseMidDif > bestCaseMidDif)))) {
+
+                    bestCaseScoure = scoures[0];
+                    bestCase = s2;
+                    bestCaseDif = thisCaseDif;
+                    bestCaseMidDif = thisCaseMidDif;
+                    if (bestCaseScoure >= last.getTagOfSilde().length / 2) {
+                        break;
+                    }
+                    if (bestCaseScoure == max) {
                         break;
                     }
                 }
@@ -230,6 +327,7 @@ public class Chalnge {
             for (int j = 0; j < s2Tags.length; j++) {
                 if (s1Tags[i].equals(s2Tags[j])) {
                     shared++;
+                    break;
                 }
             }
             s1Extra = s1Tags.length - shared;
@@ -241,6 +339,7 @@ public class Chalnge {
 
     public static int bestmMtch(ArrayList<Photo> photos, int id) {
         String[] tags1 = photos.get(id).getTags();
+
         if (!orderedPhotos) { //makes ordered arry of all V photos based on tag lengh
             ArrayList<Photo> newPhotos = new ArrayList<>(photos.size());
             for (int i = 0; i < photos.size(); i++) {
@@ -253,12 +352,13 @@ public class Chalnge {
             Arrays.sort(arrayPhotos);
             orderedPhotos = true;
         }
-        
+
         int[] scores = new int[arrayPhotos.length];
         int count;
-        for (int i = id; i < arrayPhotos.length; i++) {
+        for (int i = 0; i < arrayPhotos.length; i++) {
+            scores[i] = 99999;
             count = 0;
-            if (arrayPhotos[i].isChosen() || arrayPhotos[i].getCharacter() == 'H' || i == id) {
+            if (arrayPhotos[i].isChosen() || arrayPhotos[i].getID() == id) {
                 continue;
             }
 
@@ -272,17 +372,19 @@ public class Chalnge {
                 }
             }
             scores[i] = count;
-            if(count == 0)
+            if (count == 0) {
                 break;
+            }
         }
         int min = 99999;
-        int minIndex = id;
-        for (int i = id; i < scores.length; i++) {
-            if (scores[i] < min || (scores[i] == min && photos.get(minIndex).getTags().length < photos.get(i).getTags().length)) {
+        int minIndex = -1;
+        for (int i = 0; i < scores.length; i++) {
+            if (scores[i] < min) {
                 min = scores[i];
-                minIndex = i;
-                if(min == 0 )
+                minIndex = arrayPhotos[i].getID();
+                if (min == 0) {
                     break;
+                }
             }
         }
 

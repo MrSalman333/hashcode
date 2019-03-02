@@ -13,7 +13,7 @@ public class Photo implements Comparable<Photo> {
 
     @Override
     public int compareTo(Photo o) {
-        return this.getTags().length - o.getTags().length;
+        return -(this.getTags().length - o.getTags().length);
     }
     private char character;
     private boolean chosen;
