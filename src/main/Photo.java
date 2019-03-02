@@ -9,25 +9,31 @@ package main;
  *
  * @author MrS
  */
-public class Photo {
+public class Photo implements Comparable<Photo> {
+
+    @Override
+    public int compareTo(Photo o) {
+        return this.getTags().length - o.getTags().length;
+    }
     private char character;
     private boolean chosen;
     private String[] tags;
     private int ID;
-    private static int count=0; 
+    private static int count = 0;
 
     public Photo() {
 
         this.character = ' ';
         this.chosen = false;
         this.tags = null;
-        this.ID=count;
+        this.ID = count;
         count++;
     }
 
-    public static void clearIds (){
+    public static void clearIds() {
         count = 0;
     }
+
     public int getID() {
         return ID;
     }
@@ -88,16 +94,12 @@ public class Photo {
 
     @Override
     public String toString() {
-        String tags ="{";
+        String tags = "{";
         for (int i = 0; i < this.tags.length; i++) {
-            tags+=this.tags[i]+", ";
+            tags += this.tags[i] + ", ";
         }
-        tags+="}";
+        tags += "}";
         return "Photo{" + "character=" + character + ", chosen=" + chosen + ", tags=" + tags + ", ID=" + ID + '}';
     }
-
-
-
-
 
 }
