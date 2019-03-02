@@ -112,6 +112,8 @@ public class Chalnge {
                 System.out.println("done ordring " + ordered.size());
             }
             int bestCaseScoure = -1;
+            int bestCaseDif = 9999;
+            int bestCaseMidDif = 9999;
             Slide bestCase = null;
 
             for (int i = 0; i < slides.size(); i += 1) {
@@ -119,10 +121,14 @@ public class Chalnge {
                 if (s2.isAdded()) {
                     continue;
                 }
-                int scoure = score(last, s2);
-                if (scoure > bestCaseScoure) {
-                    bestCaseScoure = scoure;
+                int scoures[] = scores(last, s2);
+                int thisCaseDif =max(scoures[0],scoures[1],scoures[2]) - min(scoures[0],scoures[1],scoures[2]) ;
+                int thisCaseMidDif = max(scoures[0],scoures[1],scoures[2]) - mid(scoures[0],scoures[1],scoures[2]) ;
+                if (scoures[0] > bestCaseScoure || (scoures[0] == bestCaseScoure && (thisCaseDif < bestCaseDif || (thisCaseDif == bestCaseDif && thisCaseMidDif > bestCaseMidDif))  )  ) {
+                    bestCaseScoure = scoures[0];
                     bestCase = s2;
+                    bestCaseDif =thisCaseDif ;
+                    bestCaseMidDif = thisCaseMidDif;
                 }
             }
 
@@ -146,7 +152,32 @@ public class Chalnge {
 
         return ordered;
     }
-
+    
+    public static int max(int n1,int n2,int n3){
+        return Math.max(n1, Math.max(n2, n3));
+    }
+    
+    public static int min(int n1,int n2,int n3){
+        return Math.min(n1, Math.min(n2, n3));
+    }
+    
+        public static int mid(int n1,int n2,int n3){
+            if(n1 == max(n1,n2,n3)){
+                if(Math.min(n2, n3) == n2){
+                    return n3;
+                }else{
+                    return n2;
+                }   
+            }else if(n2 == max(n1, n2, n3)){
+                if(Math.min(n1, n3) == n1){
+                    return n3;
+                }else{
+                    return n1;
+                }   
+            }else{
+                return n3;
+            }
+        }
     public static void write(String fileName, ArrayList<Slide> list) {
 
         int numberOfSlides = list.size();
@@ -166,7 +197,7 @@ public class Chalnge {
         }
     }
 
-    public static int score(Slide s1, Slide s2) {
+    public static int[] scores(Slide s1, Slide s2) {
         int shared = 0;
         int s1Extra = 0;
         int s2Extra = 0;
@@ -182,8 +213,8 @@ public class Chalnge {
             s1Extra = s1Tags.length - shared;
             s2Extra = s2Tags.length - shared;
         }
-
-        return Math.min(Math.min(shared, s1Extra), s2Extra);
+        int returned[] = {shared,s1Extra,s2Extra};
+        return returned;
     }
 
     public static int bestmMtch(ArrayList<Photo> photos, int id) {
