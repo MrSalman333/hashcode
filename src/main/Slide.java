@@ -11,17 +11,12 @@ import java.util.Comparator;
  *
  * @author MrS
  */
-public class Slide implements Comparable<Slide>, Comparator<Slide> {
+public class Slide implements Comparable<Slide> {
 
-    @Override
-    public int compare(Slide o1, Slide o2) {
-        return o1.getTagOfSilde().length - o2.getTagOfSilde().length;
-        
-    }
 
     @Override
     public int compareTo(Slide o) {
-        return this.getTagOfSilde().length - o.getTagOfSilde().length;
+        return o.getTagOfSilde().length - this.getTagOfSilde().length;
     }
 
     private int numberOfPhoto;

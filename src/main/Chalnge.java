@@ -125,7 +125,7 @@ public class Chalnge {
                 if (s2.isAdded()) {
                     continue;
                 }
-                if(s2.getTagOfSilde().length > 2*bestCaseScoure)
+                if(bestCaseScoure>= last.getTagOfSilde().length/2)
                     break;
                 int scoures[] = scores(last, s2);
                 int thisCaseDif =max(scoures[0],scoures[1],scoures[2]) - min(scoures[0],scoures[1],scoures[2]) ;
